@@ -2,14 +2,15 @@
 
 #include <stdio.h>
 #include <Windows.h>
-
+#include <strsafe.h>
 LPWSTR ClipboardOutputText();
 
-int WINAPI WINMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine, int nCmdShow)
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine, int nCmdShow)
 {
 	while (TRUE)
 	{
 		LPSTR Data = ClipboardOutputText();
+	
 		TCHAR Alert[] = L"Вы нарушали Авторские права, скопировав следующий текс: ";
 		TCHAR third[512];
 		swprintf(third, sizeof third, L"%s%s", Alert, Data);
@@ -21,6 +22,34 @@ int WINAPI WINMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine, 
 		Sleep(1000);
 	}
 	return 0;
+}
+
+TCHAR* Text(LPSTR Data)
+{
+	// Массив со строкой для поиска
+	char str[512] = Data;
+	// Набор символов, которые должны входить в искомый сегмент
+	char sep[512] = " ";
+	// Переменная, в которую будут заноситься начальные адреса частей
+	// строки str
+	char* istr;
+
+	// Выделение первой части строки
+	istr = strtok(str, sep);
+
+	// Выделение последующих частей
+	while (istr != NULL)
+	{
+		char str[512] = istr;
+		// Набор символов, которые должны входить в искомый сегмент
+		char sep[512] = "/0";
+		
+		
+		// Выделение очередной части строки
+		istr = strtok(NULL, sep);
+	}
+	
+	
 }
 int ClipboardInputText(LPWSTR buffer)
 {
