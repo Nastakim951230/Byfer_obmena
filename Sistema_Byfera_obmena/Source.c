@@ -69,6 +69,7 @@ TCHAR* ClipboardOutptText2()
 	
 		int i = 0;
 		int n = strlen(str1);
+
 		for (i = 0; i != n; i++)
 		{
 			if (str1[i] == '0')
