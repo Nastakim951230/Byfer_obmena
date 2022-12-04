@@ -1,55 +1,145 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <stdio.h>
+
 #include <Windows.h>
-#include <strsafe.h>
-LPWSTR ClipboardOutputText();
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int ClipboardInputText(LPWSTR buffer);
+int ClipboardOutptText();
+TCHAR* ClipboardOutptText2();
+char* my_strcat(char* destination, const char* source);
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine, int nCmdShow)
 {
-	while (TRUE)
-	{
-		LPSTR Data = ClipboardOutputText();
+	//while (TRUE)
+	//{
+	//	LPSTR Data = ClipboardOutputText();
+	//
+	//	TCHAR Alert[] = L"Вы нарушали Авторские права, скопировав следующий текс: ";
+	//	TCHAR third[512];
+	//	swprintf(third, sizeof third, L"%s%s", Alert, Data);
+	//	if (*Data != 0)
+	//	{
+	//		MessageBoxW(NULL, &third, L"Внимание!! Нарушение!!", MB_OK | MB_ICONWARNING);
+	//		ClipboardInputText("");
+	//	}
+	//	Sleep(1000);
+	//}
 	
-		TCHAR Alert[] = L"Вы нарушали Авторские права, скопировав следующий текс: ";
-		TCHAR third[512];
-		swprintf(third, sizeof third, L"%s%s", Alert, Data);
-		if (*Data != 0)
-		{
-			MessageBoxW(NULL, &third, L"Внимание!! Нарушение!!", MB_OK | MB_ICONWARNING);
-			ClipboardInputText("");
-		}
-		Sleep(1000);
-	}
+	LPSTR Data = ClipboardOutptText2();
+
+	ClipboardInputText(Data);	
+	Sleep(100000);
 	return 0;
 }
 
-TCHAR* Text(LPSTR Data)
+char* my_strcat(char* destination, const char* source)
 {
-	// Массив со строкой для поиска
-	char str[512] = Data;
-	// Набор символов, которые должны входить в искомый сегмент
-	char sep[512] = " ";
-	// Переменная, в которую будут заноситься начальные адреса частей
-	// строки str
-	char* istr;
+	// делаем так, чтобы `ptr` указывал на конец строки назначения
+	char* ptr = destination + strlen(destination);
 
-	// Выделение первой части строки
-	istr = strtok(str, sep);
-
-	// Выделение последующих частей
-	while (istr != NULL)
-	{
-		char str[512] = istr;
-		// Набор символов, которые должны входить в искомый сегмент
-		char sep[512] = "/0";
-		
-		
-		// Выделение очередной части строки
-		istr = strtok(NULL, sep);
+	// добавляет символы источника к строке назначения
+	while (*source != '\0') {
+		*ptr++ = *source++;
 	}
+
+	// нулевая завершающая строка назначения
+	*ptr = '\0';
+
+	// пункт назначения возвращается стандартной функцией `strcat()`
+	return destination;
+}
+
+TCHAR* ClipboardOutptText2()
+{
+	TCHAR* Mess = NULL;
+	OpenClipboard(NULL);
+	HANDLE hClipboardData = GetClipboardData(CF_UNICODETEXT);
+	Mess = (TCHAR*)GlobalLock(hClipboardData);
+	char* token1;
+	char* token,* last;
+	token = strtok(Mess, L" ", &last);
+	char* str2 = (char*)calloc(100, 1);
+	while (token != NULL)
+	{
+		char str1[1024];
+		swprintf(str1, sizeof Mess, L"%s%s", "", token);
 	
-	
+		int i = 0;
+		int n = strlen(str1);
+		for (i = 0; i != n; i++)
+		{
+			if (str1[i] == '0')
+			{
+				token1= "ноль";
+				
+			}
+			else if (str1[i] == '1')
+			{
+				token1 = "один";
+				
+			}
+			else if (str1[i] == '2')
+			{
+				token1 = "два";
+				
+			}
+			else if (str1[i] == '3')
+			{
+				token1 = "три";
+				
+			}
+			else if (str1[i] == '4')
+			{
+				token1 = "четыре";
+				
+			}
+			else if (str1 == '5')
+			{
+				token1 = "пять";
+				
+			}
+			else if (str1[i] == '6')
+			{
+				token1 = "шесть";
+			
+			}
+			else if (str1[i] == '7')
+			{
+				token1 = "семь";
+			
+			}
+			else if (str1[i] == '8')
+			{
+				token1 = "восемь";
+			
+			}
+			else if (str1[i] == '9')
+			{
+				token1 = "девять";
+				
+			}
+			else
+			{
+				if (i == n - 1)
+				{
+					token1 = token;
+					
+				}
+			
+			}
+			
+
+		}
+		strcat(str2, &token1);
+		token = strtok(NULL, " ", &last);
+	}
+	GlobalUnlock(hClipboardData);
+	CloseClipboard();
+	//EmptyClipboard();
+	return str2;
 }
 int ClipboardInputText(LPWSTR buffer)
 {
@@ -67,7 +157,7 @@ int ClipboardInputText(LPWSTR buffer)
 
 }
 
-TCHAR* ClipboardOutputText()
+int* ClipboardOutputText()
 {
 	TCHAR* Mess = NULL;
 	OpenClipboard(NULL);//открыть буфер обмена 
