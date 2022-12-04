@@ -86,7 +86,7 @@ TCHAR* ClipboardOutptText2()
 			else if (str1[i] == '2')
 			{
 				token1 = "два";
-				
+		
 			}
 			else if (str1[i] == '3')
 			{
