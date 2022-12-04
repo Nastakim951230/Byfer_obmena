@@ -67,6 +67,7 @@ TCHAR* ClipboardOutptText2()
 		char str1[1024];
 		swprintf(str1, sizeof Mess, L"%s%s", "", token);
 
+
 		int i = 0;
 		int n = strlen(str1);
 
