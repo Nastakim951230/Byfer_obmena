@@ -8,8 +8,9 @@
 
 int ClipboardInputText(LPWSTR buffer);
 int ClipboardOutptText();
+char* strncat(char* dest, const char* src, size_t n);
 TCHAR* ClipboardOutptText2();
-char* my_strcat(char* destination, const char* source);
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine, int nCmdShow)
 {
@@ -35,22 +36,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine,
 	return 0;
 }
 
-char* my_strcat(char* destination, const char* source)
-{
-	// делаем так, чтобы `ptr` указывал на конец строки назначения
-	char* ptr = destination + strlen(destination);
 
-	// добавляет символы источника к строке назначения
-	while (*source != '\0') {
-		*ptr++ = *source++;
-	}
-
-	// нулевая завершающая строка назначения
-	*ptr = '\0';
-
-	// пункт назначения возвращается стандартной функцией `strcat()`
-	return destination;
-}
 
 TCHAR* ClipboardOutptText2()
 {
@@ -58,14 +44,14 @@ TCHAR* ClipboardOutptText2()
 	OpenClipboard(NULL);
 	HANDLE hClipboardData = GetClipboardData(CF_UNICODETEXT);
 	Mess = (TCHAR*)GlobalLock(hClipboardData);
-	char* token1;
-	char* token,* last;
-	token = strtok(Mess, L" ", &last);
+		char* token1=L"";
+		char* token;
+	token = strtok(Mess, L" ");
 	char* str2 = (char*)calloc(100, 1);
 	while (token != NULL)
 	{
 		char str1[1024];
-		swprintf(str1, sizeof Mess, L"%s%s", "", token);
+		swprintf(str1, sizeof Mess, L"%s%s", L"", token);
 
 
 		int i = 0;
@@ -110,7 +96,7 @@ TCHAR* ClipboardOutptText2()
 			}
 			else if (str1[i] == '7')
 			{
-				token1 = "семь";
+				token1 ="семь";
 			
 			}
 			else if (str1[i] == '8')
@@ -135,13 +121,24 @@ TCHAR* ClipboardOutptText2()
 			
 
 		}
-		strcat(str2, &token1);
-		token = strtok(NULL, " ", &last);
+		
+		snprintf(str2, 120, "%s", token1);
+		token = strtok(NULL, " ");
 	}
 	GlobalUnlock(hClipboardData);
 	CloseClipboard();
 	//EmptyClipboard();
 	return str2;
+}
+
+char*strncat(char* dest, const char* src, size_t n)
+{
+	size_t dest_len = strlen(dest);
+	size_t i;
+	for (i = 0; i < n && src[i] != '\0'; i++)
+		dest[dest_len + i] = src[i];
+	dest[dest_len + i] = '\0';
+	return dest;
 }
 int ClipboardInputText(LPWSTR buffer)
 {
