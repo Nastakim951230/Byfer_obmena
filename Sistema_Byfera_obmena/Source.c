@@ -1,14 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
-
-
 #include <Windows.h>
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 int ClipboardInputText(LPWSTR buffer);
 int ClipboardOutptText();
-char* strncat(char* dest, const char* src, size_t n);
+
 TCHAR* ClipboardOutptText2();
 
 
@@ -28,12 +24,54 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR pCmdLine,
 	//	}
 	//	Sleep(1000);
 	//}
-	
-	LPSTR Data = ClipboardOutptText2();
 
-	ClipboardInputText(Data);	
-	Sleep(100000);
+	while (TRUE)
+	{
+		LPSTR Data = ClipboardOutptText2();
+		
+		if (*Data != 0)
+		{
+			switch (*Data)
+			{
+			case '0':
+				ClipboardInputText(L"ноль");
+				break;
+			case '1':
+				ClipboardInputText(L"один");
+				break;
+			case '2':
+				ClipboardInputText(L"два");
+				break;
+			case '3':
+				ClipboardInputText(L"три");
+				break;
+			case '4':
+				ClipboardInputText(L"четыре");
+				break;
+			case '5':
+				ClipboardInputText(L"пять");
+				break;
+			case '6':
+				ClipboardInputText(L"шесть");
+				break;
+			case '7':
+				ClipboardInputText(L"семь");
+				break;
+			case '8':
+				ClipboardInputText(L"восемь");
+				break;
+			case '9':
+				ClipboardInputText(L"девять");
+				break;
+			default:
+				ClipboardInputText(Data);
+				break;
+			}
+		}
+		Sleep(1000);
+	}
 	return 0;
+
 }
 
 
@@ -44,102 +82,13 @@ TCHAR* ClipboardOutptText2()
 	OpenClipboard(NULL);
 	HANDLE hClipboardData = GetClipboardData(CF_UNICODETEXT);
 	Mess = (TCHAR*)GlobalLock(hClipboardData);
-		char* token1=L"";
-		char* token;
-	token = strtok(Mess, L" ");
-	char* str2 = (char*)calloc(100, 1);
-	while (token != NULL)
-	{
-		char str1[1024];
-		swprintf(str1, sizeof Mess, L"%s%s", L"", token);
-
-
-		int i = 0;
-		int n = strlen(str1);
-
-		for (i = 0; i != n; i++)
-		{
-			if (str1[i] == '0')
-			{
-				token1= "ноль";
-				
-			}
-			else if (str1[i] == '1')
-			{
-				token1 = "один";
-				
-			}
-			else if (str1[i] == '2')
-			{
-				token1 = "два";
-		
-			}
-			else if (str1[i] == '3')
-			{
-				token1 = "три";
-				
-			}
-			else if (str1[i] == '4')
-			{
-				token1 = "четыре";
-				
-			}
-			else if (str1 == '5')
-			{
-				token1 = "пять";
-				
-			}
-			else if (str1[i] == '6')
-			{
-				token1 = "шесть";
-			
-			}
-			else if (str1[i] == '7')
-			{
-				token1 ="семь";
-			
-			}
-			else if (str1[i] == '8')
-			{
-				token1 = "восемь";
-			
-			}
-			else if (str1[i] == '9')
-			{
-				token1 = "девять";
-				
-			}
-			else
-			{
-				if (i == n - 1)
-				{
-					token1 = token;
-					
-				}
-			
-			}
-			
-
-		}
-		
-		snprintf(str2, 120, "%s", token1);
-		token = strtok(NULL, " ");
-	}
 	GlobalUnlock(hClipboardData);
 	CloseClipboard();
 	//EmptyClipboard();
-	return str2;
+	return Mess;
 }
 
-char*strncat(char* dest, const char* src, size_t n)
-{
-	size_t dest_len = strlen(dest);
-	size_t i;
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[dest_len + i] = src[i];
-	dest[dest_len + i] = '\0';
-	return dest;
-}
+
 int ClipboardInputText(LPWSTR buffer)
 {
 	DWORD len;
